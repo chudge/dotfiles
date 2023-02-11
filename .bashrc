@@ -80,9 +80,54 @@ if ! shopt -oq posix; then
 fi
 
 
+## my stuff
+
+# start shell with tmux
+# could also do
+# 	exec tmux new-session -A -s main
+# to have a named session called main each time
+# only way to exit tmux here will be to detach
+if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
+  exec tmux
+fi
+
+## paths
+
+# /usr/sbin cause it's annoying when it's not there
+if [ -d "/usr/sbin/" ]; then
+	PATH="/usr/sbin/:$PATH"
+fi
+
+# home bin
+if [ -d "$HOME/bin" ]; then
+	PATH="$HOME/bin:$PATH"
+fi
+
+# tools path for stuff I write
+if [ -d "$HOME/tools" ]; then
+	PATH="$HOME/tools:$PATH"
+fi
+
+# system go path
+if [ -d "/usr/local/go/bin" ]; then
+	PATH="/usr/local/go/bin:$PATH"
+fi
+
+# home go bin
+if [ -d "$HOME/go/bin" ]; then
+	PATH="$HOME/go/bin:$PATH"
+fi
+
+# set rust env
+if [ -d "$HOME/.cargo" ]; then
+	. "$HOME/.cargo/env"
+fi
+
 # aliases
 source ~/.bash_aliases
 
 # completions
 source ~/.bash_completions
 
+# vi mode
+set -o vi
